@@ -70,23 +70,18 @@ meansdata <- fulldata[,grep("mean()|std()|Activity|Subjects", names(fulldata))]
 # Drop columns containing Freq from the remainder
 meansdata <- meansdata[,-grep("Freq", names(meansdata))]
 
-# Calculate the means of each type of observation by grouping on Subject & Activity_Label
+# Tidy the data and calculate the means of each type of observation by grouping on Subject & Activity_Label
 finaldata <- aggregate(. ~ Subjects + Activity_Label,meansdata,mean)
 
-# Make the data tidy by using gather, to recast 180x68 table into 11880x4 table with each of the 
-# 11880 = 30x6x66 combinations of Subject / Activity / type of Measurement showing one value for
-# that measurement
-tidydata <- gather (finaldata, Measurement, Value, -Subjects, - Activity_Label)
-
-# Make the names of the type of Measurements a bit more explicit / readable
-tidydata$Measurement<-gsub("^t", "time", tidydata$Measurement)
-tidydata$Measurement<-gsub("^f", "frequency", tidydata$Measurement)
-tidydata$Measurement<-gsub("Acc", "Accelerometer", tidydata$Measurement)
-tidydata$Measurement<-gsub("Gyro", "Gyroscope", tidydata$Measurement)
-tidydata$Measurement<-gsub("Mag", "Magnitude", tidydata$Measurement)
-tidydata$Measurement<-gsub("BodyBody", "Body", tidydata$Measurement)
+# Make the names of variables in finaldata a bit more explicit / readable
+names(finaldata) <-gsub("^t", "time", names(finaldata))
+names(finaldata) <-gsub("^f", "frequency", names(finaldata))
+names(finaldata) <-gsub("Acc", "Accelerometer", names(finaldata))
+names(finaldata) <-gsub("Gyro", "Gyroscope", names(finaldata))
+names(finaldata) <-gsub("Mag", "Magnitude", names(finaldata))
+names(finaldata) <-gsub("BodyBody", "Body", names(finaldata))
 
 # Write out the file of tidydata in .txt format
-write.table(tidydata, "tidydata.txt", row.names = FALSE)
+write.table(finaldata, "tidydata.txt", row.names = FALSE)
 ```
 

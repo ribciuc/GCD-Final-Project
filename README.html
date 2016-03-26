@@ -173,24 +173,19 @@ meansdata &lt;- fulldata[,grep(&quot;mean()|std()|Activity|Subjects&quot;, names
 # Drop columns containing Freq from the remainder
 meansdata &lt;- meansdata[,-grep(&quot;Freq&quot;, names(meansdata))]
 
-# Calculate the means of each type of observation by grouping on Subject &amp; Activity_Label
+# Tidy the data and calculate the means of each type of observation by grouping on Subject &amp; Activity_Label
 finaldata &lt;- aggregate(. ~ Subjects + Activity_Label,meansdata,mean)
 
-# Make the data tidy by using gather, to recast 180x68 table into 11880x4 table with each of the 
-# 11880 = 30x6x66 combinations of Subject / Activity / type of Measurement showing one value for
-# that measurement
-tidydata &lt;- gather (finaldata, Measurement, Value, -Subjects, - Activity_Label)
-
-# Make the names of the type of Measurements a bit more explicit / readable
-tidydata$Measurement&lt;-gsub(&quot;^t&quot;, &quot;time&quot;, tidydata$Measurement)
-tidydata$Measurement&lt;-gsub(&quot;^f&quot;, &quot;frequency&quot;, tidydata$Measurement)
-tidydata$Measurement&lt;-gsub(&quot;Acc&quot;, &quot;Accelerometer&quot;, tidydata$Measurement)
-tidydata$Measurement&lt;-gsub(&quot;Gyro&quot;, &quot;Gyroscope&quot;, tidydata$Measurement)
-tidydata$Measurement&lt;-gsub(&quot;Mag&quot;, &quot;Magnitude&quot;, tidydata$Measurement)
-tidydata$Measurement&lt;-gsub(&quot;BodyBody&quot;, &quot;Body&quot;, tidydata$Measurement)
+# Make the names of variables in finaldata a bit more explicit / readable
+names(finaldata) &lt;-gsub(&quot;^t&quot;, &quot;time&quot;, names(finaldata))
+names(finaldata) &lt;-gsub(&quot;^f&quot;, &quot;frequency&quot;, names(finaldata))
+names(finaldata) &lt;-gsub(&quot;Acc&quot;, &quot;Accelerometer&quot;, names(finaldata))
+names(finaldata) &lt;-gsub(&quot;Gyro&quot;, &quot;Gyroscope&quot;, names(finaldata))
+names(finaldata) &lt;-gsub(&quot;Mag&quot;, &quot;Magnitude&quot;, names(finaldata))
+names(finaldata) &lt;-gsub(&quot;BodyBody&quot;, &quot;Body&quot;, names(finaldata))
 
 # Write out the file of tidydata in .txt format
-write.table(tidydata, &quot;tidydata.txt&quot;, row.names = FALSE)</code></pre>
+write.table(finaldata, &quot;tidydata.txt&quot;, row.names = FALSE)</code></pre>
 </div>
 </div>
 
